@@ -5,9 +5,10 @@
  *  Component: Display - blob (plaintext)
  *
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
+ *  Copyright (C) 2009 Michael Vigovsky <xvmv@mail.ru>
  */
 
- require_once('gitutil.git_cat_file.php');
+ require_once('glip/lib/glip.php');
  require_once('util.file_mime.php');
 
 function git_blob_plain($projectroot,$project,$hash,$file)
@@ -18,6 +19,9 @@ function git_blob_plain($projectroot,$project,$hash,$file)
 
 	$buffer = null;
 
+	$git = new Git($projectroot . $project);
+	$hash = $git->revParse($hash);
+
 	// XXX: Nasty hack to cache headers
 	if (!$tpl->is_cached('blobheaders.tpl', $cachekey)) {
 		if ($file)
@@ -25,7 +29,7 @@ function git_blob_plain($projectroot,$project,$hash,$file)
 		else
 			$saveas = $hash . ".txt";
 
-		$buffer = git_cat_file($projectroot . $project, $hash);
+		$buffer = $git->getObject($hash)->data;
 
 		if ($gitphp_conf['filemimetype'])
 			$mime = file_mime($buffer, $file);
@@ -51,7 +55,7 @@ function git_blob_plain($projectroot,$project,$hash,$file)
 
 	if (!$tpl->is_cached('blobplain.tpl', $cachekey)) {
 		if (!$buffer)
-			$buffer = git_cat_file($projectroot . $project, $hash);
+			$buffer = $git->getObject($hash)->data;
 		$tpl->assign("blob", $buffer);
 	}
 	$tpl->display('blobplain.tpl', $cachekey);

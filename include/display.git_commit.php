@@ -5,13 +5,15 @@
  *  Component: Display - commit
  *
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
+ *  Copyright (C) 2009 Michael Vigovsky <xvmv@mail.ru>
  */
 
+ require_once('glip/lib/glip.php');
  require_once('util.file_type.php');
  require_once('util.date_str.php');
- require_once('gitutil.git_read_commit.php');
- require_once('gitutil.git_diff_tree.php');
- require_once('gitutil.read_info_ref.php');
+ require_once('glip.git_read_commit.php');
+// require_once('gitutil.git_diff_tree.php');
+ require_once('glip.read_info_ref.php');
 
 function git_commit($projectroot,$project,$hash)
 {
@@ -19,8 +21,11 @@ function git_commit($projectroot,$project,$hash)
 
 	$cachekey = sha1($project) . "|" . $hash;
 
+	$git = new Git($projectroot . $project);
+	$hash = $git->revParse($hash);
+
 	if (!$tpl->is_cached('commit.tpl', $cachekey)) {
-		$co = git_read_commit($projectroot . $project, $hash);
+		$co = git_read_commit($git, $hash);
 		$ad = date_str($co['author_epoch'],$co['author_tz']);
 		$cd = date_str($co['committer_epoch'],$co['committer_tz']);
 		if (isset($co['parent'])) {
@@ -30,9 +35,9 @@ function git_commit($projectroot,$project,$hash)
 			$root = "--root";
 			$parent = "";
 		}
-		$diffout = git_diff_tree($projectroot . $project, $root . " " . $parent . " " . $hash, TRUE);
+		$diffout = "";//git_diff_tree($projectroot . $project, $root . " " . $parent . " " . $hash, TRUE);
 		$difftree = explode("\n",$diffout);
-		$tpl->assign("hash",$hash);
+		$tpl->assign("hash",sha1_hex($hash));
 		$tpl->assign("tree",$co['tree']);
 		if (isset($co['parent']))
 			$tpl->assign("parent",$co['parent']);

@@ -5,9 +5,10 @@
  *  Component: Display - project index
  *
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
+ *  Copyright (C) 2009 Michael Vigovsky <xvmv@mail.ru>
  */
 
- require_once('gitutil.git_read_projects.php');
+ require_once('glip.git_read_projects.php');
 
 function git_project_index($projectroot, $projectlist)
 {

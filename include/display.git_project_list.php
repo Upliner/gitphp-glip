@@ -5,13 +5,14 @@
  *  Component: Display - project list
  *
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
+ *  Copyright (C) 2009 Michael Vigovsky <xvmv@mail.ru>
  */
 
  require_once('util.projectcmp.php');
  require_once('util.descrcmp.php');
  require_once('util.ownercmp.php');
  require_once('util.agecmp.php');
- require_once('gitutil.git_read_projects.php');
+ require_once('glip.git_read_projects.php');
 
 function git_project_list($projectroot,$projectlist,$order = "project")
 {
