@@ -8,7 +8,7 @@
  */
 
  require_once('util.script_url.php');
- require_once('gitutil.git_read_projects.php');
+ require_once('glip.git_read_projects.php');
 
 function git_opml($projectroot,$projectlist)
 {

@@ -15,7 +15,7 @@
  require_once('glip.git_read_head.php');
  require_once('glip.git_read_commit.php');
  require_once('glip.git_read_revlist.php');
-// require_once('gitutil.git_read_refs.php');
+ require_once('glip.git_read_refs.php');
  require_once('glip.read_info_ref.php');
 
 function git_summary($projectroot,$project)
@@ -60,7 +60,7 @@ function git_summary($projectroot,$project)
 		}
 		$tpl->assign("revlist",$revlist);
 
-		/*$taglist = git_read_refs($projectroot,$project,"refs/tags");
+		/*$taglist = git_read_refs($git,"refs/tags");
 		if (isset($taglist) && (count($taglist) > 0)) {
 			foreach ($taglist as $i => $tag) {
 				if (isset($tag['comment'])) {
@@ -71,12 +71,12 @@ function git_summary($projectroot,$project)
 				}
 			}
 			$tpl->assign("taglist",$taglist);
-		}
+		}*/
 
-		$headlist = git_read_refs($projectroot,$project,"refs/heads");
+		$headlist = git_read_refs($git,"refs/heads");
 		if (isset($headlist) && (count($headlist) > 0)) {
 			$tpl->assign("headlist",$headlist);
-		}*/
+		}
 	}
 	$tpl->display('project.tpl', $cachekey);
 }
