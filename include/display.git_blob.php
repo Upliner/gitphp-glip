@@ -24,8 +24,8 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 
 	$git = new Git($projectroot . $project);
 
-	$hash = $git->revParse($hash);
-	$hashbase = $git->revParse($hashbase);
+	if (isset($hash))     $hash     = $git->revParse($hash);
+	if (isset($hashbase)) $hashbase = $git->revParse($hashbase);
 
 	if (!$tpl->is_cached('blob.tpl',$cachekey)) {
 		$head = git_read_head($git);
