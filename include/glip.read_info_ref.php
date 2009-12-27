@@ -12,8 +12,14 @@ function read_info_ref($project, $type = "")
 {
 	$refs = $project->getRefs();
 	$result = array();
-	foreach ($refs as $key => $value)
-		$result[$value] = $key;
+	foreach ($refs as $key => $value) {
+		if (preg_match("`$type/([^\^]+)`",$key,$regs)) {
+			if (isset($result[$value]))
+				$result[$value] .= " / " . $regs[1];
+			else
+				$result[$value] = $regs[1];
+		}
+	}
 	return $result;
 }
 
