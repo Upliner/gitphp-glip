@@ -16,7 +16,7 @@
  require_once('glip.git_read_commit.php');
  require_once('glip.git_read_revlist.php');
 // require_once('gitutil.git_read_refs.php');
-// require_once('glip.read_info_ref.php');
+ require_once('glip.read_info_ref.php');
 
 function git_summary($projectroot,$project)
 {
@@ -31,7 +31,7 @@ function git_summary($projectroot,$project)
 		$commit = git_read_commit($git, $head);
 		$commitdate = date_str($commit['committer_epoch'],$commit['committer_tz']);
 		$owner = git_project_owner($projectroot,$project);
-		//$refs = read_info_ref($projectroot . $project);
+		$refs = read_info_ref($git);
 		$tpl->assign("head",sha1_hex($head));
 		$tpl->assign("description",$descr);
 		$tpl->assign("owner",$owner);
@@ -47,8 +47,8 @@ function git_summary($projectroot,$project)
 			$revco = git_read_commit($git, $rev->getName());
 			$authordate = date_str($revco['author_epoch']);
 			$revdata["commit"] = $revhash;
-			if (isset($refs[$rev]))
-				$revdata["commitref"] = $refs[$revhash];
+			if (isset($refs[$rev->getName()]))
+				$revdata["commitref"] = $refs[$rev->getName()];
 			$revdata["commitage"] = $revco['age_string'];
 			$revdata["commitauthor"] = $revco['author_name'];
 			if (strlen($revco['title_short']) < strlen($revco['title'])) {

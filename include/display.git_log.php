@@ -31,7 +31,7 @@ function git_log($projectroot,$project,$hash,$page)
 			$hash = $git->revParse($hash);
 		if (!isset($page))
 			$page = 0;
-		$refs = read_info_ref($projectroot . $project);
+		$refs = read_info_ref($git);
 		$tpl->assign("hash",sha1_hex($hash));
 		$tpl->assign("head",sha1_hex($head));
 
@@ -60,8 +60,8 @@ function git_log($projectroot,$project,$hash,$page)
 			$ad = date_str($co['author_epoch']);
 			$commitline["project"] = $project;
 			$commitline["commit"] = $commithash;
-			if (isset($refs[$commithash]))
-				$commitline["commitref"] = $refs[$commithash];
+			if (isset($refs[$commit->getName()]))
+				$commitline["commitref"] = $refs[$commit->getName()];
 			$commitline["agestring"] = $co['age_string'];
 			$commitline["title"] = $co['title'];
 			$commitline["authorname"] = $co['author_name'];

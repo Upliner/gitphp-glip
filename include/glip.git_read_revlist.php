@@ -10,7 +10,7 @@
 
 function git_read_revlist($proj,$head,$count = NULL,$skip = NULL)
 {
-	//$hash = $proj->revParse($head);
+	// FIXME: currently displays only single branch!
 	$commit = $proj->getObject($head);
 	while ($skip--) {
 		if (isset($commit->parents[0]))

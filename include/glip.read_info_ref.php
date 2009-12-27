@@ -8,14 +8,13 @@
  *  Copyright (C) 2009 Michael Vigovsky <xvmv@mail.ru>
  */
 
- require_once('defs.commands.php');
- require_once('gitutil.git_exec.php');
-
 function read_info_ref($project, $type = "")
 {
-	$refs = array();
-	//FIXME: stub
-	return $refs;
+	$refs = $project->getRefs();
+	$result = array();
+	foreach ($refs as $key => $value)
+		$result[$value] = $key;
+	return $result;
 }
 
 ?>

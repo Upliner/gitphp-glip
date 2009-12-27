@@ -39,7 +39,7 @@ function git_blob($projectroot, $project, $hash, $file, $hashbase)
 		$tpl->assign("head", sha1_hex($head));
 		if ($co = git_read_commit($git, $hashbase)) {
 			$tpl->assign("fullnav",TRUE);
-			$refs = read_info_ref($projectroot . $project);
+			$refs = read_info_ref($git);
 			$tpl->assign("tree",$co['tree']);
 			$tpl->assign("title",$co['title']);
 			if (isset($file))

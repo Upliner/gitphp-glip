@@ -42,9 +42,9 @@ function git_commit($projectroot,$project,$hash)
 		if (isset($co['parent']))
 			$tpl->assign("parent",$co['parent']);
 		$tpl->assign("title",$co['title']);
-		$refs = read_info_ref($projectroot . $project);
-		if (isset($refs[$co['id']]))
-			$tpl->assign("commitref",$refs[$co['id']]);
+		$refs = read_info_ref($git);
+		if (isset($refs[$hash]))
+			$tpl->assign("commitref",$refs[$hash]);
 		$tpl->assign("author",$co['author']);
 		$tpl->assign("adrfc2822",$ad['rfc2822']);
 		$tpl->assign("adhourlocal",$ad['hour_local']);

@@ -31,7 +31,7 @@ function git_shortlog($projectroot,$project,$hash,$page)
 			$hash = $git->revParse($hash);
 		if (!isset($page))
 			$page = 0;
-		$refs = read_info_ref($projectroot . $project);
+		$refs = read_info_ref($git);
 		$tpl->assign("hash",sha1_hex($hash));
 		$tpl->assign("head",sha1_hex($head));
 
@@ -49,8 +49,8 @@ function git_shortlog($projectroot,$project,$hash,$page)
 			$commit = $revlist[$i];
 			$commithash = sha1_hex($commit->getName());
 			$commitline = array();
-			if (isset($refs[$commithash]))
-				$commitline["commitref"] = $refs[$commithash];
+			if (isset($refs[$commit->getName()]))
+				$commitline["commitref"] = $refs[$commit->getName()];
 			$co = git_read_commit($git, $commit->getName());
 			$ad = date_str($co['author_epoch']);
 			$commitline["commit"] = $commithash;

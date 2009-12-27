@@ -36,7 +36,7 @@ function git_tree($projectroot,$project,$hash,$file,$hashbase)
 			if (isset($file))
 				$hash = git_get_hash_by_path($git, $git->getObject($hashbase?$hashbase:$hash),$file,"tree");
 		}
-		$refs = read_info_ref($projectroot . $project);
+		$refs = read_info_ref($git);
 
 		$tpl->assign("hash",sha1_hex($hash));
 		if (isset($hashbase))
