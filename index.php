@@ -193,7 +193,7 @@ if ($gitphp_conf['filesearch'])
 					break;
 				case "blobdiff_plain":
 					require_once('include/display.git_blobdiff_plain.php');
-					git_blobdiff_plain($gitphp_conf['projectroot'],$project,$_GET['h'],$_GET['hb'],$_GET['hp'], (isset($_GET['f']) ? $_GET['f'] : NULL));
+					git_blobdiff_plain($gitphp_conf['projectroot'],$project,$_GET['h'],$_GET['hp'], (isset($_GET['f']) ? $_GET['f'] : NULL));
 					break;
 				case "snapshot":
 					require_once('include/display.git_snapshot.php');
