@@ -29,14 +29,14 @@ function git_commit($projectroot,$project,$hash)
 		$ad = date_str($co['author_epoch'],$co['author_tz']);
 		$cd = date_str($co['committer_epoch'],$co['committer_tz']);
 		if (isset($co['parent'])) {
-			$root = "";
-			$parent = $co['parent'];
+			$a_tree = $git->getObject(sha1_bin($co['parent']))->getTree();
 		} else {
-			$root = "--root";
-			$parent = "";
+			$a_tree = false;
 		}
-		$diffout = "";//git_diff_tree($projectroot . $project, $root . " " . $parent . " " . $hash, TRUE);
-		$difftree = explode("\n",$diffout);
+		$b_tree = $git->getObject(sha1_bin($co['tree']));
+		$difftree = GitTree::treeDiff($a_tree,$b_tree);
+		ksort($difftree);
+
 		$tpl->assign("hash",sha1_hex($hash));
 		$tpl->assign("tree",$co['tree']);
 		if (isset($co['parent']))
@@ -59,41 +59,42 @@ function git_commit($projectroot,$project,$hash)
 		$tpl->assign("parents",$co['parents']);
 		$tpl->assign("comment",$co['comment']);
 		$tpl->assign("difftreesize",count($difftree)+1);
+		$status_map = array(
+			GitTree::TREEDIFF_ADDED   => "A",
+			GitTree::TREEDIFF_REMOVED => "D",
+			GitTree::TREEDIFF_CHANGED => "M");
 		$difftreelines = array();
-		foreach ($difftree as $i => $line) {
-			if (preg_match("/^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)([0-9]{0,3})\t(.*)$/",$line,$regs)) {
-				$difftreeline = array();
-				$difftreeline["from_mode"] = $regs[1];
-				$difftreeline["to_mode"] = $regs[2];
-				$difftreeline["from_mode_cut"] = substr($regs[1],-4);
-				$difftreeline["to_mode_cut"] = substr($regs[2],-4);
-				$difftreeline["from_id"] = $regs[3];
-				$difftreeline["to_id"] = $regs[4];
-				$difftreeline["status"] = $regs[5];
-				$difftreeline["similarity"] = ltrim($regs[6],"0");
-				$difftreeline["file"] = $regs[7];
-				$difftreeline["from_file"] = strtok($regs[7],"\t");
-				$difftreeline["from_filetype"] = file_type($regs[1]);
-				$difftreeline["to_file"] = strtok("\t");
-				$difftreeline["to_filetype"] = file_type($regs[2]);
-				if ((octdec($regs[2]) & 0x8000) == 0x8000)
-					$difftreeline["isreg"] = TRUE;
-				$modestr = "";
-				if ((octdec($regs[1]) & 0x17000) != (octdec($regs[2]) & 0x17000))
-					$modestr .= " from " . file_type($regs[1]) . " to " . file_type($regs[2]);
-				if ((octdec($regs[1]) & 0777) != (octdec($regs[2]) & 0777)) {
-					if ((octdec($regs[1]) & 0x8000) && (octdec($regs[2]) & 0x8000))
-						$modestr .= " mode: " . (octdec($regs[1]) & 0777) . "->" . (octdec($regs[2]) & 0777);
-					else if (octdec($regs[2]) & 0x8000)
-						$modestr .= " mode: " . (octdec($regs[2]) & 0777);
-				}
-				$difftreeline["modechange"] = $modestr;
-				$simmodechg = "";
-				if ($regs[1] != $regs[2])
-					$simmodechg .= ", mode: " . (octdec($regs[2]) & 0777);
-				$difftreeline["simmodechg"] = $simmodechg;
-				$difftreelines[] = $difftreeline;
-			}
+		foreach ($difftree as $file => $status) {
+			$difftreeline = array();
+			$difftreeline["from_mode"] = "100644";
+			$difftreeline["to_mode"] = "100644";
+			$difftreeline["from_mode_cut"] = "0644";
+			$difftreeline["to_mode_cut"] = "0644";
+			$difftreeline["from_id"] = "";
+			$difftreeline["to_id"] = "";
+			$difftreeline["status"] = $status_map[$status];
+			$difftreeline["similarity"] = "";
+			$difftreeline["file"] = $file;
+			$difftreeline["from_file"] = "";
+			$difftreeline["from_filetype"] = "";
+			$difftreeline["to_file"] = "";
+			$difftreeline["to_filetype"] = "";
+			$difftreeline["isreg"] = TRUE;
+
+			$modestr = "";
+			/*if ((octdec($regs[1]) & 0x17000) != (octdec($regs[2]) & 0x17000))
+				$modestr .= " from " . file_type($regs[1]) . " to " . file_type($regs[2]);
+			if ((octdec($regs[1]) & 0777) != (octdec($regs[2]) & 0777)) {
+				if ((octdec($regs[1]) & 0x8000) && (octdec($regs[2]) & 0x8000))
+					$modestr .= " mode: " . (octdec($regs[1]) & 0777) . "->" . (octdec($regs[2]) & 0777);
+				else if (octdec($regs[2]) & 0x8000)
+					$modestr .= " mode: " . (octdec($regs[2]) & 0777);*/
+			$difftreeline["modechange"] = $modestr;
+			$simmodechg = "";
+			/*if ($regs[1] != $regs[2])
+				$simmodechg .= ", mode: " . (octdec($regs[2]) & 0777);*/
+			$difftreeline["simmodechg"] = $simmodechg;
+			$difftreelines[] = $difftreeline;
 		}
 		$tpl->assign("difftreelines",$difftreelines);
 	}
