@@ -34,7 +34,7 @@ function git_commit($projectroot,$project,$hash)
 			$a_tree = false;
 		}
 		$b_tree = $git->getObject(sha1_bin($co['tree']));
-		$difftree = GitTree::treeDiff($a_tree,$b_tree);
+		$difftree = GitTree::diffTree($a_tree,$b_tree);
 		ksort($difftree);
 
 		$tpl->assign("hash",sha1_hex($hash));
@@ -64,15 +64,15 @@ function git_commit($projectroot,$project,$hash)
 			GitTree::TREEDIFF_REMOVED => "D",
 			GitTree::TREEDIFF_CHANGED => "M");
 		$difftreelines = array();
-		foreach ($difftree as $file => $status) {
+		foreach ($difftree as $file => $diff) {
 			$difftreeline = array();
-			$difftreeline["from_mode"] = "100644";
-			$difftreeline["to_mode"] = "100644";
-			$difftreeline["from_mode_cut"] = "0644";
-			$difftreeline["to_mode_cut"] = "0644";
-			$difftreeline["from_id"] = "";
-			$difftreeline["to_id"] = "";
-			$difftreeline["status"] = $status_map[$status];
+			$difftreeline["from_mode"] = decoct($diff->old_mode);
+			$difftreeline["to_mode"]   = decoct($diff->new_mode);
+			$difftreeline["from_mode_cut"] = substr(decoct($diff->old_mode),-4);
+			$difftreeline["to_mode_cut"]   = substr(decoct($diff->new_mode),-4);
+			$difftreeline["from_id"] = sha1_hex($diff->old_obj);
+			$difftreeline["to_id"]   = sha1_hex($diff->new_obj);
+			$difftreeline["status"] = $status_map[$diff->status];
 			$difftreeline["similarity"] = "";
 			$difftreeline["file"] = $file;
 			$difftreeline["from_file"] = "";
