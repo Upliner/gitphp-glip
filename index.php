@@ -5,6 +5,7 @@
  *  Component: Index script
  *
  *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
+ *  Copyright (C) 2010 Michael Vigovsky <xvmv@mail.ru>
  */
 
  /*
@@ -25,8 +26,8 @@
  $project = null;
 
  if (isset($_GET['p'])) {
- 	$fullpath = realpath($gitphp_conf['projectroot'] . $_GET['p']);
-	$realprojroot = realpath($gitphp_conf['projectroot']);
+	$fullpath = $gitphp_conf['projectroot'] . $_GET['p'];
+	$realprojroot = $gitphp_conf['projectroot'];
 	$pathpiece = substr($fullpath, 0, strlen($realprojroot));
 	if (strcmp($pathpiece, $realprojroot) === 0) {
 		$project = str_replace(chr(0), '', $_GET['p']);
@@ -120,10 +121,10 @@ if ($gitphp_conf['filesearch'])
 	git_message("Cache expired");
  } else if (isset($_GET['a']) && $_GET['a'] == "opml") {
 	require_once('include/display.git_opml.php');
-	git_opml($gitphp_conf['projectroot'],$git_projects);
+	git_opml($gitphp_conf['projectroot'],(isset($git_projects) ? $git_projects : null));
  } else if (isset($_GET['a']) && $_GET['a'] == "project_index") {
 	require_once('include/display.git_project_index.php');
-	git_project_index($gitphp_conf['projectroot'],$git_projects);
+	git_project_index($gitphp_conf['projectroot'],(isset($git_projects) ? $git_projects : null));
  } else if ($project) {
  	if (!is_dir($gitphp_conf['projectroot'] . $project)) {
 		$tpl->assign("validproject",FALSE);
