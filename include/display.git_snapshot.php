@@ -5,10 +5,12 @@
  *  Component: Display - snapshot
  *
  *  Copyright (C) 2008 Christopher Han <xiphux@gmail.com>
+ *  Copyright (C) 2010 Michael Vigovsky <xvmv@mail.ru>
  */
 
+require_once('glip/lib/glip.php');
 require_once('defs.constants.php');
- require_once('gitutil.git_archive.php');
+require_once('glip.git_archive.php');
 
 function git_snapshot($projectroot,$project,$hash)
 {
@@ -23,10 +25,10 @@ function git_snapshot($projectroot,$project,$hash)
 	$gzencode = false;
 
 	$rname = str_replace(array("/",".git"),array("-",""),$project);
-	if ($gitphp_conf['compressformat'] == GITPHP_COMPRESS_ZIP) {
+	/*if ($gitphp_conf['compressformat'] == GITPHP_COMPRESS_ZIP) {
 		header("Content-Type: application/x-zip");
 		header("Content-Disposition: attachment; filename=" . $rname . ".zip");
-	} else if (($gitphp_conf['compressformat'] == GITPHP_COMPRESS_BZ2) && function_exists("bzcompress")) {
+	} else*/ if (($gitphp_conf['compressformat'] == GITPHP_COMPRESS_BZ2) && function_exists("bzcompress")) {
 		$bzcompress = true;
 		header("Content-Type: application/x-bzip2");
 		header("Content-Disposition: attachment; filename=" . $rname . ".tar.bz2");
@@ -39,10 +41,11 @@ function git_snapshot($projectroot,$project,$hash)
 		header("Content-Disposition: attachment; filename=" . $rname . ".tar");
 	}
 
+	$git = new Git($projectroot . $project);
+
 	if (!$tpl->is_cached('snapshot.tpl', $cachekey)) {
 
-		$arc = git_archive($projectroot . $project, $hash, $rname,
-			(($gitphp_conf['compressformat'] == GITPHP_COMPRESS_ZIP) ? "zip" : "tar"));
+		$arc = git_archive($git, $hash, $rname);
 
 		if (($gitphp_conf['compressformat'] == GITPHP_COMPRESS_BZ2) && $bzcompress) {
 			$arc = bzcompress($arc,(isset($gitphp_conf['compresslevel'])?$gitphp_conf['compresslevel']:4));
