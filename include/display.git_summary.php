@@ -60,7 +60,7 @@ function git_summary($projectroot,$project)
 		}
 		$tpl->assign("revlist",$revlist);
 
-		/*$taglist = git_read_refs($git,"refs/tags");
+		$taglist = git_read_refs($git,"refs/tags");
 		if (isset($taglist) && (count($taglist) > 0)) {
 			foreach ($taglist as $i => $tag) {
 				if (isset($tag['comment'])) {
@@ -71,7 +71,7 @@ function git_summary($projectroot,$project)
 				}
 			}
 			$tpl->assign("taglist",$taglist);
-		}*/
+		}
 
 		$headlist = git_read_refs($git,"refs/heads");
 		if (isset($headlist) && (count($headlist) > 0)) {
