@@ -66,7 +66,7 @@ function git_summary($projectroot,$project)
 				if (isset($tag['comment'])) {
 					$com = trim($tag['comment'][0]);
 					if (strlen($com) > GITPHP_TRIM_LENGTH)
-						$com = substr($trimmed,0,GITPHP_TRIM_LENGTH) . "...";
+						$com = substr($com,0,GITPHP_TRIM_LENGTH) . "...";
 					$taglist[$i]['comment'] = $com;
 				}
 			}
