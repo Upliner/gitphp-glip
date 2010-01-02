@@ -13,8 +13,10 @@ require_once('wikidiff/wikidiff.php');
 
 function git_diff($proj,$from,$from_name,$to,$to_name)
 {
-	$fromdata = $proj->GetObject($from)->data;
-	$todata   = $proj->GetObject($to)->data;
+	$fromdata = $from ? $proj->GetObject($from)->data : "";
+	$todata   = $to   ? $proj->GetObject($to)->data : "";
+	$fromdata = str_replace("\r\n","\n",$fromdata);
+	$todata = str_replace("\r\n","\n",$todata);
 	$diff = new Diff(explode("\n",$fromdata),explode("\n",$todata));
 	$diffFormatter = new UnifiedDiffFormatter();
 	$diffFormatter->leading_context_lines = 3;
