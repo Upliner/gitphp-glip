@@ -200,19 +200,6 @@ if ($gitphp_conf['filesearch'])
 					require_once('include/display.git_snapshot.php');
 					git_snapshot($gitphp_conf['projectroot'],$project, (isset($_GET['h']) ? $_GET['h'] : NULL));
 					break;
-				case "history":
-					require_once('include/display.git_history.php');
-					git_history($gitphp_conf['projectroot'],$project, (isset($_GET['h']) ? $_GET['h'] : NULL),$_GET['f']);
-					break;
-				case "search":
-					if (isset($_GET['st']) && ($_GET['st'] == 'file')) {
-						require_once('include/display.git_search_files.php');
-						git_search_files($gitphp_conf['projectroot'],$project,(isset($_GET['h']) ? $_GET['h'] : NULL),(isset($_GET['s']) ? $_GET['s'] : NULL),(isset($_GET['pg']) ? $_GET['pg'] : 0));
-					} else {
-						require_once('include/display.git_search.php');
-						git_search($gitphp_conf['projectroot'],$project,(isset($_GET['h']) ? $_GET['h'] : NULL),(isset($_GET['s']) ? $_GET['s'] : NULL),(isset($_GET['st']) ? $_GET['st'] : "commit"),(isset($_GET['pg']) ? $_GET['pg'] : 0));
-					}
-					break;
 				case "tag":
 					require_once('include/display.git_tag.php');
 					git_tag($gitphp_conf['projectroot'],$project,$_GET['h']);

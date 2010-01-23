@@ -1,6 +1,6 @@
 <?php
 /*
- *  gitutil.git_read_refs.php
+ *  glip.git_read_refs.php
  *  gitphp: A PHP git repository browser
  *  Component: Git utility - read refs
  *

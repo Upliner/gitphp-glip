@@ -7,7 +7,7 @@
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  */
 
-require_once('gitutil.git_read_refs.php');
+require_once('glip.git_read_refs.php');
 
 function cache_expire($projectroot, $project, $projectlist, $expireall = false)
 {

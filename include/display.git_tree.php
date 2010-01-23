@@ -12,7 +12,6 @@
  require_once('util.mode_str.php');
  require_once('glip.git_read_head.php');
  require_once('glip.git_get_hash_by_path.php');
-// require_once('gitutil.git_ls_tree.php');
  require_once('glip.read_info_ref.php');
  require_once('glip.git_read_commit.php');
  require_once('glip.git_path_trees.php');

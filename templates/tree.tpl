@@ -44,7 +44,7 @@
              <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$treelines[tree].hash}{if $hashbase}&hb={$hashbase}{/if}&f={if $base}{$base}{/if}{$treelines[tree].name}" class="list">{$treelines[tree].name}</a>
 	   </td>
            <td class="link">
-	     <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$treelines[tree].hash}{if $hashbase}&hb={$hashbase}{/if}&f={if $base}{$base}{/if}{$treelines[tree].name}">blob</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=history&h={$hashbase}&f={if $base}{$base}{/if}{$treelines[tree].name}">history</a>
+	     <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$treelines[tree].hash}{if $hashbase}&hb={$hashbase}{/if}&f={if $base}{$base}{/if}{$treelines[tree].name}">blob</a>
 	   </td>
          {elseif $treelines[tree].type == "tree"}
            <td class="list">

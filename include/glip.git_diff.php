@@ -1,6 +1,6 @@
 <?php
 /*
- *  gitutil.git_diff.php
+ *  glip.git_diff.php
  *  gitphp: A PHP git repository browser
  *  Component: Git utility - diff
  *

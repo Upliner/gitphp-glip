@@ -12,7 +12,6 @@
  require_once('util.file_type.php');
  require_once('util.date_str.php');
  require_once('glip.git_read_commit.php');
-// require_once('gitutil.git_diff_tree.php');
  require_once('glip.read_info_ref.php');
 
 function git_commit($projectroot,$project,$hash)
