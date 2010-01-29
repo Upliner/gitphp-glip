@@ -227,7 +227,7 @@ $gitphp_conf['cachelifetime'] = 3600;
  * Sets the base push url to display for a project.
  * Works the same as cloneurl.
  */
-//$gitphp_conf['pushurl'] = "ssh://localhost/git/";
+//$gitphp_conf['pushurl'] = "http://localhost/git/push.php/";
 
 /*
  * git_projects
