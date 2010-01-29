@@ -173,8 +173,8 @@ if ($method == "POST" && $vpath = "git-receive-pack")
 		fclose($f);
 
 		// update objects/info/packs
-		$f = fopen($repo_dir . "info/packs","w");
-		foreach (glob($repo_dir . "info/pack-*.pack") as $pack)
+		$f = fopen($repo_dir . "objects/info/packs","w");
+		foreach (glob($repo_dir . "objects/pack/pack-*.pack") as $pack)
 		{
 			fwrite($f,"P $pack\n");
 		}
