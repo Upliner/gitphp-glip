@@ -75,7 +75,7 @@ if ($method=="GET" && $vpath == "info/refs?service=git-receive-pack")
 		$line = sha1_hex($hash) . " $ref";
 		if ($flag)
 		{
-			$line .= "\0report-status ofs-delta";
+			$line .= "\0report-status ofs-delta delete-refs";
 			$flag = false;
 		}
 		$line .= "\n";
@@ -129,24 +129,46 @@ if ($method == "POST" && $vpath = "git-receive-pack")
 		// update references
 		foreach ($refs as $refline)
 		{
-			$refline = substr($refline,0,strpos($refline,"\0"));
+			// trim out everything after first null
+			$nullpos = strpos($refline,"\0");
+			if ($nullpos !== false)
+				$refline = substr($refline,0,$nullpos);
+
 			list($oldhash, $newhash, $uref) = explode(" ", $refline);
+
+			//check refline for correctness
+			if (is_null($uref))
+				throw new Exception("Invalid refline $refline");
 			if (!is_valid_sha1($oldhash) || !is_valid_sha1($newhash))
 			{
 				$line = "ng $uref invalid sha1 hash\n";
+				echo sprintf("%04x%s",strlen($line)+4,$line);
+				continue;
+			}
+			if (substr($uref,0,5) !== "refs/" || strpos($uref,"..") !== false)
+			{
+				$line = "ng $uref invalid ref\n";
+				echo sprintf("%04x%s",strlen($line)+4,$line);
 				continue;
 			}
 
 			// check the oldhash
-			$rfile = fopen($repo_dir . $uref,"r+");
-			flock($rfile,LOCK_EX);
-			$oldhash_check = trim(stream_get_contents($rfile));
-			if ($oldhash !== $oldhash_check)
+			if ($oldhash !== str_repeat('0',40))
 			{
-				$line = "ng $uref oldhash mismatch\n";
-				echo sprintf("%04x%s",strlen($line)+4,$line);
-				fclose($rfile);
-				continue;
+				$rfile = fopen($repo_dir . $uref,"r+");
+				flock($rfile,LOCK_EX);
+				$oldhash_check = trim(stream_get_contents($rfile));
+				if ($oldhash !== $oldhash_check)
+				{
+					$line = "ng $uref oldhash mismatch\n";
+					echo sprintf("%04x%s",strlen($line)+4,$line);
+					fclose($rfile);
+					continue;
+				}
+			} else
+			{
+				$rfile = fopen($repo_dir . $uref,"w+");
+				flock($rfile,LOCK_EX);
 			}
 
 			// write a record into reflog
@@ -155,13 +177,21 @@ if ($method == "POST" && $vpath = "git-receive-pack")
 			fclose($rlog);
 
 			// update ref
-			fseek($rfile,0);
-			ftruncate($rfile,0);
-			fwrite($rfile,$newhash . "\n");
-			fclose($rfile);
+			if ($newhash === str_repeat('0',40))
+			{
+				fclose($rfile);
+				unlink($repo_dir . $uref);
+			} else
+			{
+				fseek($rfile,0);
+				ftruncate($rfile,0);
+				fwrite($rfile,$newhash . "\n");
+				fclose($rfile);
+			}
 
 			$line = "ok $uref\n";
 			echo sprintf("%04x%s",strlen($line)+4,$line);
+			unset($uref);
 		}
 		//update info/refs
 		$f = fopen($repo_dir . "info/refs","w");
