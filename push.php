@@ -59,7 +59,6 @@ $repo_dir = $gitphp_conf['projectroot'] . $repo_name . '/';
  * PROPGET, update your Git. You need version 1.6.6-rc0 or newer to be
  * able to push into GitPHP repos.
  */
-
 if ($method=="HEAD") $method = "GET";
 if ($method=="GET" && $vpath == "info/refs?service=git-receive-pack")
 {
@@ -70,6 +69,7 @@ if ($method=="GET" && $vpath == "info/refs?service=git-receive-pack")
 	$refcache = new GitRefCache($repo_dir);
 	$refs = $refcache->refs;
 	ksort($refs);
+	if (count($refs) === 0) $refs["capabilities^{}"] = str_repeat(chr(0),20);
 	foreach ($refs as $ref => $hash)
 	{
 		$line = sha1_hex($hash) . " $ref";
@@ -97,24 +97,27 @@ if ($method == "POST" && $vpath = "git-receive-pack")
 		while (($s = read_pkt_line($inp)) !== null)
 		$refs[] = $s;
 
-		// create temporary packfile
-		$rands = str_pad(mt_rand(0,999999999),9,"0",STR_PAD_LEFT);
-		$tmpname = $repo_dir . "objects/tmp-$rands.pack";
-		$tmpf = fopen($tmpname,"xb");
-		flock($tmpf,LOCK_EX);
-		while (!feof($inp))
+		if (!feof($inp))
 		{
-			$s = fread($inp,0x10000);
-			fwrite($tmpf,$s);
-		}
-		fclose($tmpf);
+			// create temporary packfile
+			$rands = str_pad(mt_rand(0,999999999),9,"0",STR_PAD_LEFT);
+			$tmpname = $repo_dir . "objects/tmp-$rands.pack";
+			$tmpf = fopen($tmpname,"xb");
+			flock($tmpf,LOCK_EX);
+			while (!feof($inp))
+			{
+				$s = fread($inp,0x10000);
+				fwrite($tmpf,$s);
+			}
+			fclose($tmpf);
 
-		// index the received pack
-		$git = new Git(rtrim($repo_dir,"\\"));
-		$indexer = new GitIndexPack($git);
-		$indexer->indexPack($tmpname);
-		$line = "unpack ok\n";
-		echo sprintf("%04x%s",strlen($line)+4,$line);
+			// index the received pack
+			$git = new Git(rtrim($repo_dir,"\\"));
+			$indexer = new GitIndexPack($git);
+			$indexer->indexPack($tmpname);
+	    		$line = "unpack ok\n";
+			echo sprintf("%04x%s",strlen($line)+4,$line);
+		}
 	} catch (Exception $e)
 	{
 		@unlink($tmpname);
@@ -206,7 +209,7 @@ if ($method == "POST" && $vpath = "git-receive-pack")
 		$f = fopen($repo_dir . "objects/info/packs","w");
 		foreach (glob($repo_dir . "objects/pack/pack-*.pack") as $pack)
 		{
-			fwrite($f,"P $pack\n");
+			fwrite($f, sprintf("P %s\n", basename($pack)));
 		}
 		fwrite($f,"\n");
 		fclose($f);
