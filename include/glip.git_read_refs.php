@@ -44,7 +44,7 @@ function git_read_refs($project,$refdir)
 			$reflist[] = $refobj;
 	}
 
-	$packedrefs = git_read_packed_refs($project->dir, "", $refdir);
+	$packedrefs = git_read_packed_refs($project, $refdir);
 	if (isset($packedrefs) && count($packedrefs) > 0) {
 		foreach ($packedrefs as $packedref) {
 			$found = false;

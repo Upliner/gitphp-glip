@@ -9,13 +9,13 @@
 
  require_once('gitutil.git_read_hash.php');
 
-function git_read_packed_refs($projectroot, $project, $refdir)
+function git_read_packed_refs($project, $refdir)
 {
-	if (!is_file($projectroot . $project . '/packed-refs'))
+	if (!is_file($project->dir . '/packed-refs'))
 		return null;
 
 	$refs = array();
-        $refs = explode("\n",git_read_hash($projectroot . $project . "/" . 'packed-refs'));
+        $refs = explode("\n",git_read_hash($project->dir . "/" . 'packed-refs'));
 	$reflist = array();
 
 	$dirlen = strlen($refdir);
@@ -24,7 +24,7 @@ function git_read_packed_refs($projectroot, $project, $refdir)
 		if (preg_match('/^([0-9a-f]{40}) (.+)$/i', trim($i), $regs)) {
 			if (strncmp($refdir, $regs[2], $dirlen) === 0) {
 				$regs[2] = substr($regs[2], $dirlen+1);
-				$refobj = git_read_ref($projectroot, $project, $regs[1], $regs[2]);
+				$refobj = git_read_ref($project, $regs[1], $regs[2]);
 				if (isset($refobj))
 					$reflist[] = $refobj;
 			}
