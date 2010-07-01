@@ -14,7 +14,7 @@
   {* Something is wrong; display an error message instead of trying to list *}
   {include file='message.tpl'}
 {else}
-  <table cellspacing="0">
+  <table cellspacing="0" class="project_list">
     {* Header *}
     <tr>
       {if $order == "project"}
@@ -60,7 +60,16 @@
             </td>
             <td><a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=summary" class="list">{$plist[proj].descr}</a></td>
             <td><i>{$plist[proj].owner}</i></td>
-            <td>
+            {assign var=age value=noage}
+            {if $plist[proj].age <= 7200}  {assign var=age value=age0}  {/if}  {* 60*60*2, or 2 hours *}
+            {if $plist[proj].age >= 7200 && $plist[proj].age <= 172800 }  {assign var=age value=age1}  {/if}
+            {if $plist[proj].age >= 172800}  {assign var=age value=age2}  {/if}  {* 60*60*24*2, or 2 days *}
+            
+            <td class="{$age}">
+            
+            {$plist[proj].age_string}
+            
+            <!--
               {if $plist[proj].age < 7200}   {* 60*60*2, or 2 hours *}
                 <span class="agehighlight"><b><i>{$plist[proj].age_string}</i></b></span>
 	      {elseif $plist[proj].age < 172800}   {* 60*60*24*2, or 2 days *}
@@ -68,6 +77,7 @@
               {else}
                 <i>{$plist[proj].age_string}</i>
               {/if}
+              -->
             </td>
             <td class="link"><a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=tree">tree</a> | <a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=snapshot&h=HEAD">snapshot</a></td>
           </tr>
@@ -84,7 +94,15 @@
           </td>
           <td><a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=summary" class="list">{$projects[proj].descr}</a></td>
           <td><i>{$projects[proj].owner}</i></td>
-          <td>
+          {assign var=age value=noage}
+            {if $projects[proj].age <= 7200}  {assign var=age value=age0}  {/if}  {* 60*60*2, or 2 hours *}
+            {if $projects[proj].age >= 7200 && $projects[proj].age <= 172800 }  {assign var=age value=age1}  {/if}
+            {if $projects[proj].age >= 172800}  {assign var=age value=age2}  {/if}  {* 60*60*24*2, or 2 days *}
+          <td class="{$age}">
+            
+            {$projects[proj].age_string}
+         
+          <!--
             {if $projects[proj].age < 7200}   {* 60*60*2, or 2 hours *}
               <span class="agehighlight"><b><i>{$projects[proj].age_string}</i></b></span>
 	    {elseif $projects[proj].age < 172800}   {* 60*60*24*2, or 2 days *}
@@ -92,6 +110,7 @@
 	    {else}
               <i>{$projects[proj].age_string}</i>
             {/if}
+            -->
           </td>
           <td class="link"><a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=tree">tree</a> | <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=snapshot&h=HEAD">snapshot</a></td>
         </tr>
