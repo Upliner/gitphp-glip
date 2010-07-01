@@ -48,7 +48,12 @@ function git_summary($projectroot,$project)
 			$authordate = date_str($revco['author_epoch']);
 			$revdata["commit"] = $revhash;
 			if (isset($refs[$rev->getName()]))
+			{
 				$revdata["commitref"] = $refs[$rev->getName()];
+				$revdata["commitclass"] = preg_match('/^head/',$refs[$rev->getName()]) ? 'head' : (
+				    preg_match('/^remote/',$refs[$rev->getName()]) ? 'remote' : ''
+				);
+		    }
 			$revdata["commitage"] = $revco['age_string'];
 			$revdata["commitauthor"] = $revco['author_name'];
 			if (strlen($revco['title_short']) < strlen($revco['title'])) {

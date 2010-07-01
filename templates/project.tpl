@@ -15,7 +15,7 @@
  </div>
  <div class="title">&nbsp;</div>
  {* Project brief *}
- <table cellspacing="0">
+ <table cellspacing="0" class="projects_list">
    <tr><td>description</td><td>{$description}</td></tr>
    <tr><td>owner</td><td>{$owner}</td></tr>
    <tr><td>last change</td><td>{$lastchange}</td></tr>
@@ -26,10 +26,10 @@
      <tr><td>push url</td><td>{$pushurl}</td></tr>
    {/if}
  </table>
- <div>
+ <div class="header">
    <a class="title" href="{$SCRIPT_NAME}?p={$project}&a=shortlog">shortlog</a>
  </div>
- <table cellspacing="0">
+ <table cellspacing="0" class="shortlog">
    {* Recent revisions *}
    {section name=rev max=17 loop=$revlist}
      {if $smarty.section.rev.index == 16}
@@ -41,11 +41,13 @@
          <td><i>{$revlist[rev].commitage}</i></td>
          <td><i>{$revlist[rev].commitauthor}</i></td>
          <td>
-           <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$revlist[rev].commit}" class="list" {if $revlist[rev].title}title="{$revlist[rev].title}"{/if}><b>{$revlist[rev].title_short}
+           <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$revlist[rev].commit}" class="list" {if $revlist[rev].title}title="{$revlist[rev].title}"{/if}>{$revlist[rev].title_short}
              {if $revlist[rev].commitref}
-               <span class="tag">{$revlist[rev].commitref}</span>
+               <span class="refs">
+                    <span class="{$revlist[rev].commitclass}">{$revlist[rev].commitref}</span>
+               </span>
              {/if}
-           </b>
+           
          </td>
          <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$revlist[rev].commit}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$revlist[rev].commit}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$revlist[rev].commit}&hb={$revlist[rev].commit}">tree</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=snapshot&h={$revlist[rev].commit}">snapshot</a></td>
        </tr>
@@ -54,10 +56,10 @@
  </table>
  {if $taglist}
    {* Tags *}
-   <div>
+   <div class="header">
      <a href="{$SCRIPT_NAME}?p={$project}&a=tags" class="title">tags</a>
    </div>
-   <table cellspacing="0">
+   <table cellspacing="0" class="tags">
      {section name=tag max=17 loop=$taglist}
        <tr class="{cycle name=tags values="light,dark"}">
          {if $smarty.section.tag.index == 16}
@@ -83,17 +85,17 @@
  {/if}
  {if $headlist}
    {* Heads *}
-   <div>
+   <div class="header">
      <a href="{$SCRIPT_NAME}?p={$project}&a=heads" class="title">heads</a>
    </div>
-   <table cellspacing="0">
+   <table cellspacing="0" class="heads">
      {section name=head max=17 loop=$headlist}
        <tr class="{cycle name=heads values="light,dark"}">
          {if $smarty.section.head.index == 16}
            <td><a href="{$SCRIPT_NAME}?p={$project}&a=heads">...</a></td>
          {else}
            <td><i>{$headlist[head].age_string}</i></td>
-           <td><a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/heads/{$headlist[head].name}" class="list"><b>{$headlist[head].name}</b></td>
+           <td><a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/heads/{$headlist[head].name}" class="list">{$headlist[head].name}</td>
            <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h=refs/heads/{$headlist[head].name}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h=refs/heads/{$headlist[head].name}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h=refs/heads/{$headlist[head].name}&hb={$headlist[head].name}">tree</a></td>
          {/if}
        </tr>

@@ -88,6 +88,7 @@
  $tpl->assign("stylesheet",$gitphp_conf['stylesheet']);
  $tpl->assign("version",$gitphp_version);
  $tpl->assign("pagetitle",$gitphp_conf['title']);
+  $tpl->assign("maintitle",$gitphp_conf['maintitle']);
  if ($project) {
 	$tpl->assign("validproject",TRUE);
 	$tpl->assign("project",$project);
