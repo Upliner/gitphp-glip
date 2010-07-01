@@ -13,6 +13,8 @@
   */
  include_once('include/version.php');
 
+ include_once('include/util.php');
+
  /*
   * Constants
   */

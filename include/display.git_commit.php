@@ -35,15 +35,18 @@ function git_commit($projectroot,$project,$hash)
 		$b_tree = $git->getObject(sha1_bin($co['tree']));
 		$difftree = GitTree::diffTree($a_tree,$b_tree);
 		ksort($difftree);
-
 		$tpl->assign("hash",sha1_hex($hash));
 		$tpl->assign("tree",$co['tree']);
 		if (isset($co['parent']))
 			$tpl->assign("parent",$co['parent']);
 		$tpl->assign("title",$co['title']);
 		$refs = read_info_ref($git);
+		
 		if (isset($refs[$hash]))
+		{
 			$tpl->assign("commitref",$refs[$hash]);
+			$tpl->assign("commitclass",get_commit_class($refs[$hash]));
+		}
 		$tpl->assign("author",$co['author']);
 		$tpl->assign("adrfc2822",$ad['rfc2822']);
 		$tpl->assign("adhourlocal",$ad['hour_local']);

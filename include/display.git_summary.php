@@ -50,9 +50,7 @@ function git_summary($projectroot,$project)
 			if (isset($refs[$rev->getName()]))
 			{
 				$revdata["commitref"] = $refs[$rev->getName()];
-				$revdata["commitclass"] = preg_match('/^head/',$refs[$rev->getName()]) ? 'head' : (
-				    preg_match('/^remote/',$refs[$rev->getName()]) ? 'remote' : ''
-				);
+				$revdata["commitclass"] = get_commit_class($refs[$rev->getName()]);
 		    }
 			$revdata["commitage"] = $revco['age_string'];
 			$revdata["commitauthor"] = $revco['author_name'];
