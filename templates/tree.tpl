@@ -13,10 +13,10 @@
    <div class="page_nav">
      <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$hashbase}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hashbase}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hashbase}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hashbase}">commitdiff</a> | tree<br /><br />
    </div>
-   <div>
+   <div class="header">
      <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hashbase}" class="title">{$title}
        {if $hashbaseref}
-         <span class="tag">{$hashbaseref}</span>
+         <span class="refs">{$hashbaseref}</span>
        {/if}
      </a>
    </div>
@@ -25,13 +25,12 @@
    <div class="title">{$hash}</div>
  {/if}
  {* Path *}
+ 
  <div class="page_path">
-   <b>
-     <a href="{$SCRIPT_NAME}?p={$project}&a=tree&hb={$hashbase}&h={$hashbase}">[{$project}]</a> / 
+     <a href="{$SCRIPT_NAME}?p={$project}&a=tree&hb={$hashbase}&h={$hashbase}" title="tree root">[{$project}]</a> / 
      {foreach from=$paths item=path}
-       <a href="{$SCRIPT_NAME}?p={$project}&a=tree&hb={$hashbase}&h={$path.tree}&f={$path.full}">{$path.short}</a> / 
+       <a href="{$SCRIPT_NAME}?p={$project}&a=tree&hb={$hashbase}&h={$path.tree}&f={$path.full}" title="{$path.short}">{$path.short}</a> / 
      {/foreach}
-   </b>
  </div>
  <div class="page_body">
    {* List files *}
