@@ -12,7 +12,7 @@ function git_project_owner($projectroot,$project)
 	if (function_exists('posix_getpwuid')) {
 		$data = posix_getpwuid(fileowner($projectroot . $project));
 		if (isset($data['gecos']) && (strlen($data['gecos']) > 0))
-			return $data['gecos'];
+			return preg_replace('/,/','',$data['gecos']);
 		return $data['name'];
 	} else
 		return "";
