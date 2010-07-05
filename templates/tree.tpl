@@ -34,7 +34,7 @@
  </div>
  <div class="page_body">
    {* List files *}
-   <table cellspacing="0">
+   <table class="tree">
      {section name=tree loop=$treelines}
        <tr class="{cycle values="light,dark"}">
          <td class="monospace">{$treelines[tree].filemode}</td>
