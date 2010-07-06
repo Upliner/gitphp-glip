@@ -13,6 +13,8 @@
   */
  include_once('include/version.php');
 
+ include_once('include/util.php');
+
  /*
   * Constants
   */
@@ -88,6 +90,7 @@
  $tpl->assign("stylesheet",$gitphp_conf['stylesheet']);
  $tpl->assign("version",$gitphp_version);
  $tpl->assign("pagetitle",$gitphp_conf['title']);
+  $tpl->assign("maintitle",$gitphp_conf['maintitle']);
  if ($project) {
 	$tpl->assign("validproject",TRUE);
 	$tpl->assign("project",$project);

@@ -57,6 +57,7 @@ $gitphp_conf['gittmp'] = "/tmp/gitphp/";
  * version number only
  */
 $gitphp_conf['title'] = "$gitphp_appstring";
+$gitphp_conf['maintitle'] = 'Git Repositories';
 
 /*
  * self

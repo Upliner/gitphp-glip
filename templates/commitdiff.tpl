@@ -12,35 +12,50 @@
  <div class="page_nav">
    <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=shortlog&h={$hash}">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hash}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hash}">commit</a> | commitdiff | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$tree}&hb={$hash}">tree</a><br /><a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff_plain&h={$hash}&hp={$hashparent}">plain</a>
  </div>
- <div>
-   <br /><br />
- </div>
- <div>
+
+
+ <div class="header">
    <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hash}" class="title">{$title}{if $commitref} <span class="tag">{$commitref}</span>{/if}</a>
  </div>
+ 
+ <div class="author_date">
+    {$commiter} [{$rfc2822}]
+ </div>
+ 
  <div class="page_body">
-   {foreach from=$comment item=line}
-     {$line}<br />
-   {/foreach}
-   <br />
+   <div class="list_head"></div>
+   
+   <table class="diff_tree">
+    <tbody>
+        {foreach from=$difftreelines item=diff}
+        <tr class="dark">
+            <td><a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$hash}&f={$difff.file}">{$diff.file}</a></td>
+            <td></td>
+            <td class="link">  <a href="#patch{$diff.md5}">patch</a> 
+                        | <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$hash}&f={$difff.file}">blob</a>
+                       <!--  | <a href={$SCRIPT_NAME}?p={$project}&a=history&h={$hash}&f={$difff.file}">history</a> --></td>
+        </tr>
+        {/foreach}
+    </tbody></table>
+   
+   
+   
    {* Diff each file changed *}
    {section name=difftree loop=$difftreelines}
+    <div class="header"> diff --git
      {if $difftreelines[difftree].status == "A"}
-       <div class="diff_info">
-         {$difftreelines[difftree].to_type}:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}">{if $difftreelines[difftree].file}{$difftreelines[difftree].file}{else}{$difftreelines[difftree].to_id}{/if}</a>(new)
-       </div>
+        <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}">{if $difftreelines[difftree].file}{$difftreelines[difftree].file}{else}{$difftreelines[difftree].to_id}{/if}</a>(new)
      {elseif $difftreelines[difftree].status == "D"}
-       <div class="diff_info">
-         {$difftreelines[difftree].from_type}:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}">{if $difftreelines[difftree].file}{$difftreelines[difftree].file}{else}{$difftreelines[difftree].from_id}{/if}</a>(deleted)
-       </div>
+         <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}">{if $difftreelines[difftree].file}{$difftreelines[difftree].file}{else}{$difftreelines[difftree].from_id}{/if}</a>(deleted)
      {elseif $difftreelines[difftree].status == "M"}
        {if $difftreelines[difftree].from_id != $difftreelines[difftree].to_id}
-         <div class="diff_info">
-	   {$difftreelines[difftree].from_type}:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}">{if $difftreelines[difftree].file}a/{$difftreelines[difftree].file}{else}{$difftreelines[difftree].from_id}{/if}</a> -&gt; {$difftreelines[difftree].to_type}:<a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}">{if $difftreelines[difftree].file}b/{$difftreelines[difftree].file}{else}{$difftreelines[difftree].to_id}{/if}</a>
-	 </div>
+	   <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].from_id}&hb={$hash}&f={$difftreelines[difftree].file}">{if $difftreelines[difftree].file}a/{$difftreelines[difftree].file}{else}{$difftreelines[difftree].from_id}{/if}</a>  <a href="{$SCRIPT_NAME}?p={$project}&a=blob&h={$difftreelines[difftree].to_id}&hb={$hash}&f={$difftreelines[difftree].file}">{if $difftreelines[difftree].file}b/{$difftreelines[difftree].file}{else}{$difftreelines[difftree].to_id}{/if}</a>
        {/if}
      {/if}
+     </div>
+     
      {include file='filediff.tpl' diff=$difftreelines[difftree].diffout}
+     
    {/section}
  </div>
 

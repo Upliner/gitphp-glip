@@ -6,7 +6,5 @@
  *  Copyright (C) 2006 Christopher Han <xiphux@gmail.com>
  *}
  <div class="index_include">
- <p>
- git source code archive
- </p>
+    <h1>git source code archive</h1>
  </div>

@@ -42,10 +42,12 @@
  {/if}
  {* Display each commit *}
  {section name=log loop=$commitlines}
-   <div>
-     <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$commitlines[log].commit}" class="title"><span class="age">{$commitlines[log].agestring}</span>{$commitlines[log].title}
+   <div class="header">
+     <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$commitlines[log].commit}" class="title"><span class="age">{$commitlines[log].agestring}</span> {$commitlines[log].title}
        {if $commitlines[log].commitref}
-         <span class="tag">{$commitlines[log].commitref}</span>
+         <span class="refs">
+            <span class="{$commitlines[log].commitclass}">{$commitlines[log].commitref}</span>
+         </span>
        {/if}
      </a>
    </div>

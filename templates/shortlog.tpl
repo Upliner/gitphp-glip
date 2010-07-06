@@ -9,6 +9,9 @@
  {include file='header.tpl'}
 
  {* Nav *}
+ 
+
+ 
  <div class="page_nav">
    <a href="{$SCRIPT_NAME}?p={$project}&a=summary">summary</a> | shortlog | <a href="{$SCRIPT_NAME}?p={$project}&a=log&h={$hash}">log</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$hash}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$hash}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$hash}&hb={$hash}">tree</a>
    <br />
@@ -31,21 +34,23 @@
    {/if}
    <br />
  </div>
- <div>
-   <a href="{$SCRIPT_NAME}?p={$project}&a=summary" class="title">&nbsp;</a>
+ <div class="header">
+   <a href="{$SCRIPT_NAME}?p={$project}&a=summary" class="title">{$project}</a>
  </div>
- <table cellspacing="0">
+ <table cellspacing="0" class="shortlog">
    {* Display each log entry *}
    {section name=log loop=$commitlines}
      <tr class="{cycle values="light,dark"}">
        <td title="{$commitlines[log].agestringage}"><i>{$commitlines[log].agestringdate}</i></td>
        <td><i>{$commitlines[log].authorname}</i></td>
        <td>
-         <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$commitlines[log].commit}" class="list" {if $commitlines[log].title}title="{$commitlines[log].title}"{/if}><b>{$commitlines[log].title_short}
+         <a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$commitlines[log].commit}" class="list" {if $commitlines[log].title}title="{$commitlines[log].title}"{/if}>{$commitlines[log].title_short}
          {if $commitlines[log].commitref}
-           <span class="tag">{$commitlines[log].commitref}</span>
+           <span class="refs">
+            <span class="{$commitlines[log].commitclass}">{$commitlines[log].commitref}</span>
+           </span>
          {/if}
-         </b>
+        
        </td>
        <td class="link"><a href="{$SCRIPT_NAME}?p={$project}&a=commit&h={$commitlines[log].commit}">commit</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=commitdiff&h={$commitlines[log].commit}">commitdiff</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=tree&h={$commitlines[log].commit}&hb={$commitlines[log].commit}">tree</a> | <a href="{$SCRIPT_NAME}?p={$project}&a=snapshot&h={$commitlines[log].commit}">snapshot</a>
        </td>

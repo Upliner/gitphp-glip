@@ -23,7 +23,7 @@
       <a href="http://www.kernel.org/pub/software/scm/git/docs/" title="git documentation">
         <img src="git-logo.png" width="72" height="27" alt="git" class="logo" />
       </a>
-      <a href="index.php">projects</a> / 
+      <a href="index.php">{$maintitle}</a> / 
       {if $project && $validproject}
         <a href="{$SCRIPT_NAME}?p={$project}&a=summary">{$project}</a>
         {if $action && $validaction}
