@@ -45,11 +45,13 @@ function git_read_projects($projectroot,$projectlist,$projdata = FALSE)
 					else
 						$projects[$i] = $p;
 				}
+				print_r($projs);
 			}
 		} else
 			return "Projectroot is not a directory";
 	} else
 		return "No projectroot set";
+		
 	return $projects;
 }
 
