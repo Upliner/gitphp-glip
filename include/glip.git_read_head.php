@@ -8,9 +8,9 @@
  *  Copyright (C) 2009 Michael Vigovsky <xvmv@mail.ru>
  */
 
-function git_read_head($proj)
+function git_read_head(Git $proj)
 {
 	return $proj->revParse("HEAD");
 }
 
-?>
+

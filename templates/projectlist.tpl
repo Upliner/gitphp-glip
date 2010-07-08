@@ -60,24 +60,13 @@
             </td>
             <td><a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=summary" class="list">{$plist[proj].descr}</a></td>
             <td><i>{$plist[proj].owner}</i></td>
-            {assign var=age value=noage}
-            {if $plist[proj].age <= 7200}  {assign var=age value=age0}  {/if}  {* 60*60*2, or 2 hours *}
-            {if $plist[proj].age >= 7200 && $plist[proj].age <= 172800 }  {assign var=age value=age1}  {/if}
-            {if $plist[proj].age >= 172800}  {assign var=age value=age2}  {/if}  {* 60*60*24*2, or 2 days *}
-            
-            <td class="{$age}">
-            
-            {$plist[proj].age_string}
-            
-            <!--
-              {if $plist[proj].age < 7200}   {* 60*60*2, or 2 hours *}
-                <span class="agehighlight"><b><i>{$plist[proj].age_string}</i></b></span>
-	      {elseif $plist[proj].age < 172800}   {* 60*60*24*2, or 2 days *}
-                <span class="agehighlight"><i>{$plist[proj].age_string}</i></span>
-              {else}
-                <i>{$plist[proj].age_string}</i>
-              {/if}
-              -->
+            <td class="{$plist[proj].age_class}">
+            {if $plist[proj].age == false}
+               No commits
+            {else}
+                {$projects[proj].age_string} 
+            {/if}
+           
             </td>
             <td class="link"><a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=tree">tree</a> | <a href="{$SCRIPT_NAME}?p={$plist[proj].project}&a=snapshot&h=HEAD">snapshot</a></td>
           </tr>
@@ -90,29 +79,38 @@
       {section name=proj loop=$projects}
         <tr class="{cycle values="light,dark"}">
           <td>
-            <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=summary" class="list">{$projects[proj].project}</a>
-          </td>
-          <td><a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=summary" class="list">{$projects[proj].descr}</a></td>
-          <td><i>{$projects[proj].owner}</i></td>
-          {assign var=age value=noage}
-            {if $projects[proj].age <= 7200}  {assign var=age value=age0}  {/if}  {* 60*60*2, or 2 hours *}
-            {if $projects[proj].age >= 7200 && $projects[proj].age <= 172800 }  {assign var=age value=age1}  {/if}
-            {if $projects[proj].age >= 172800}  {assign var=age value=age2}  {/if}  {* 60*60*24*2, or 2 days *}
-          <td class="{$age}">
-            
-            {$projects[proj].age_string}
-         
-          <!--
-            {if $projects[proj].age < 7200}   {* 60*60*2, or 2 hours *}
-              <span class="agehighlight"><b><i>{$projects[proj].age_string}</i></b></span>
-	    {elseif $projects[proj].age < 172800}   {* 60*60*24*2, or 2 days *}
-              <span class="agehighlight"><i>{$projects[proj].age_string}</i></span>
-	    {else}
-              <i>{$projects[proj].age_string}</i>
+            {if $projects[proj].age == false}
+               {$projects[proj].project}
+            {else}
+                <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=summary" class="list">{$projects[proj].project}</a>
             {/if}
-            -->
           </td>
-          <td class="link"><a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=summary">summary</a> | <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=shortlog">shortlog</a> | <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=log">log</a> | <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=tree">tree</a> | <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=snapshot&h=HEAD">snapshot</a></td>
+          <td>
+            {if $projects[proj].age == false}
+              {$projects[proj].descr}
+            {else}
+              <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=summary" class="list">{$projects[proj].descr}</a>
+            {/if}
+          </td>
+          <td><em>{$projects[proj].owner}</em></td>
+          <td class="{$projects[proj].age_class}">
+            {if $projects[proj].age == false}
+               No commits
+            {else}
+                {$projects[proj].age_string} 
+            {/if}
+          </td>
+          <td class="link">
+            {if $projects[proj].age == false}
+             <em>No actions</em>
+            {else}
+            <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=summary">summary</a> | 
+            <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=shortlog">shortlog</a> | 
+            <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=log">log</a> | 
+            <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=tree">tree</a> | 
+            <a href="{$SCRIPT_NAME}?p={$projects[proj].project}&a=snapshot&h=HEAD">snapshot</a>
+            {/if}
+         </td>
         </tr>
       {/section}
 
