@@ -26,6 +26,12 @@ function read_pkt_line($f)
 	$s =  fread($f,$count-4);
 	return $s;
 }
+function die404($str)
+{
+	header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+	header("Content-type: text/plain");
+	die($str);
+}
 
 require_once('include/version.php');
 require_once('include/defs.constants.php');
@@ -34,16 +40,17 @@ require_once('glip/lib/glip.php');
 require_once('glip/lib/git_index_pack.php');
 
 $method = $_SERVER['REQUEST_METHOD'];
-$qs = $_SERVER['REQUEST_URI'];
 
-/* request url must be formed like that:
+/* request url can be formed by following ways:
+ * http://$host/$gitphp_path/push.php?path=$repo_name/$vfile
  * http://$host/$gitphp_path/push.php/$repo_name/$vfile
  */
-if (!preg_match('#.*push.php/([^/]*)/(.*)#',$qs,$parts))
+if (isset($_GET["path"]))
 {
-	header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-	echo "Invalid query address";
-	return;
+	if (!preg_match('#([^/]*)/(.*)#',$_GET["path"],$parts)) die404("Invalid path");
+} else
+{
+	if (!preg_match('#.*push.php/([^/]*)/(.*)#',$_SERVER["REQUEST_URI"],$parts)) die404("Invalid query address");
 }
 
 $repo_name = $parts[1]; // repo name
@@ -60,7 +67,7 @@ $repo_dir = $gitphp_conf['projectroot'] . $repo_name . '/';
  * able to push into GitPHP repos.
  */
 if ($method=="HEAD") $method = "GET";
-if ($method=="GET" && $vpath == "info/refs?service=git-receive-pack")
+if ($method=="GET" && substr($vpath,0,9) == "info/refs")
 {
 	//////////////////////////////////////////////
 	// List all references in pkt-line format
@@ -223,5 +230,4 @@ if ($method == "POST" && $vpath = "git-receive-pack")
 	}
 	return;
 }
-header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-echo "Invalid query address";
+die404("Invalid query address");
