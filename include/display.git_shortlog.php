@@ -20,6 +20,7 @@ function git_shortlog($projectroot,$project,$hash,$page)
 	global $tpl;
 
 	$cachekey = sha1($project) . "|" . $hash . "|" . (isset($page) ? $page : 0);
+    $tpl->assign('project',$project);
 
 	$git = new Git($projectroot . $project);
 
@@ -50,7 +51,10 @@ function git_shortlog($projectroot,$project,$hash,$page)
 			$commithash = sha1_hex($commit->getName());
 			$commitline = array();
 			if (isset($refs[$commit->getName()]))
+			{
 				$commitline["commitref"] = $refs[$commit->getName()];
+				$commitline["commitclass"] = get_commit_class($refs[$commit->getName()]);
+		    }
 			$co = git_read_commit($git, $commit->getName());
 			$ad = date_str($co['author_epoch']);
 			$commitline["commit"] = $commithash;

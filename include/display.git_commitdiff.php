@@ -11,6 +11,7 @@
  require_once('glip/lib/glip.php');
  require_once('util.file_type.php');
  require_once('glip.git_read_commit.php');
+ require_once('util.date_str.php');
 // require_once('glip.git_diff_tree.php');
  require_once('glip.read_info_ref.php');
  require_once('glip.git_diff.php');
@@ -28,6 +29,11 @@ function git_commitdiff($projectroot,$project,$hash,$hash_parent)
 
 	if (!$tpl->is_cached('commitdiff.tpl', $cachekey)) {
 		$co = git_read_commit($git, $hash);
+		$ad = date_str($co['author_epoch']);
+		
+		$tpl->assign('committer', $co['committer']);
+		$tpl->assign('rfc2822', $ad['rfc2822']);
+		
 		if (!isset($hash_parent) && isset($co['parent']))
 			$hash_parent = sha1_bin($co['parent']);
 
@@ -48,7 +54,6 @@ function git_commitdiff($projectroot,$project,$hash,$hash_parent)
 			GitTree::TREEDIFF_ADDED   => "A",
 			GitTree::TREEDIFF_REMOVED => "D",
 			GitTree::TREEDIFF_CHANGED => "M");
-
 		foreach ($difftree as $file => $diff) {
 			$difftreeline = array();
 			$difftreeline["from_mode"] = decoct($diff->old_mode);
@@ -57,6 +62,7 @@ function git_commitdiff($projectroot,$project,$hash,$hash_parent)
 			$difftreeline["to_id"]   = sha1_hex($diff->new_obj);
 			$difftreeline["status"] = $status_map[$diff->status];
 			$difftreeline["file"] = $file;
+			$difftreeline["md5"] = md5($file);
 			$difftreeline["from_type"] = file_type($difftreeline["from_mode"]);
 			$difftreeline["to_type"] = file_type($difftreeline["to_mode"]);
 			if ($diff->status == GitTree::TREEDIFF_ADDED)

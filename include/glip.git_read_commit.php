@@ -54,10 +54,17 @@ function git_read_commit($proj,$head)
 	$comment = explode("\n",$obj->summary . "\n" . $obj->detail);
 	$commit['comment'] = $comment;
 
-	$age = time() - $commit['committer_epoch'];
+	$age = (int) (time() - $commit['committer_epoch']);
 	$commit['age'] = $age;
 	$commit['age_string'] = age_string($age);
 	date_default_timezone_set("UTC");
+	
+	
+	$age_class = ( $age <= 7200 ) ? 'age0' : (
+	    ( $age >= 7200 && $age <= 172800 ) ? 'age1' : (
+	    ( $age >= 172800) ? 'age2' : 'noage'
+	    ));
+	$commit['age_class'] = $age_class;
 	if ($age > 60*60*24*7*2) {
 		$commit['age_string_date'] = date("Y-m-d",$commit['committer_epoch']);
 		$commit['age_string_age'] = $commit['age_string'];

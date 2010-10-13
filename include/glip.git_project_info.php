@@ -21,11 +21,18 @@ function git_project_info($projectroot,$project)
 	$projinfo["project"] = $project;
 	$projinfo["descr"] = git_project_descr($projectroot,$project,TRUE);
 	$projinfo["owner"] = git_project_owner($projectroot,$project);
-	$head = git_read_head($git, $project);
-	$commit = git_read_commit($git,$head);
+	try
+	{ 
+	    $head = git_read_head($git, $project);
+    	$commit = git_read_commit($git,$head);
+    } catch (Exception $e)
+    {
+        $head = '';
+        $commit =  array('age' => false, 'age_string' => false, 'age_class' => 'noage');
+    }
+	$projinfo['age_class'] = $commit['age_class'];
 	$projinfo["age"] = $commit['age'];
 	$projinfo["age_string"] = $commit['age_string'];
 	return $projinfo;
 }
 
-?>

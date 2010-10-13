@@ -59,6 +59,10 @@ span.tag {
 	padding:0px 4px; font-size:10px; font-weight:normal;
 	background-color:#ffffaa; border:1px solid; border-color:#ffffcc #ffee00 #ffee00 #ffffcc;
 }
+span.head {
+	padding:0px 4px; font-size:10px; font-weight:normal;
+	background-color: #aaffaa; border:1px solid; border-color:#ffffcc #ffee00 #ffee00 #ffffcc;
+}
 .diffplus {
 	color: #008800;
 }

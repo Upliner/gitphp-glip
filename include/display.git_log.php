@@ -61,7 +61,10 @@ function git_log($projectroot,$project,$hash,$page)
 			$commitline["project"] = $project;
 			$commitline["commit"] = $commithash;
 			if (isset($refs[$commit->getName()]))
+			{
 				$commitline["commitref"] = $refs[$commit->getName()];
+				$commitline["commitclass"] = get_commit_class($refs[$commit->getName()]);
+		    }
 			$commitline["agestring"] = $co['age_string'];
 			$commitline["title"] = $co['title'];
 			$commitline["authorname"] = $co['author_name'];
