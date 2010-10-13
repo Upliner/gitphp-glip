@@ -11,6 +11,14 @@
 require_once('defs.constants.php');
 require_once('util.age_string.php');
 
+function author_trans($name)
+{
+        global $author_map;
+        if (isset($author_map[$name]))
+                $name = $author_map[$name];
+        return $name;
+}
+
 function git_read_commit($proj,$head)
 {
 	$obj = $proj->getObject($head);
@@ -27,15 +35,15 @@ function git_read_commit($proj,$head)
 
 	$commit['tree'] = sha1_hex($obj->tree);
 
-	$commit['author'] = sprintf("%s <%s>",$obj->author->name,$obj->author->email);
+	$commit['author'] = sprintf("%s <%s>",author_trans($obj->author->name),$obj->author->email);
 	$commit['author_epoch'] = $obj->author->time;
 	$commit['author_tz'] = sprintf("%+03d%02d",$obj->author->offset/3600,abs($obj->author->offset%3600/60));
-	$commit['author_name'] = $obj->author->name;
+	$commit['author_name'] = author_trans($obj->author->name);
 
-	$commit['committer'] = sprintf("%s <%s>",$obj->committer->name,$obj->committer->email);
+	$commit['committer'] = sprintf("%s <%s>",author_trans($obj->committer->name),$obj->committer->email);
 	$commit['committer_epoch'] = $obj->committer->time;
 	$commit['committer_tz'] = sprintf("%+03d%02d",$obj->committer->offset/3600,abs($obj->committer->offset%3600/60));
-	$commit['committer_name'] = $obj->committer->name;
+	$commit['committer_name'] = author_trans($obj->committer->name);
 
 	$commit['title'] = $obj->summary;
 	if (strlen($obj->summary) > GITPHP_TRIM_LENGTH)
