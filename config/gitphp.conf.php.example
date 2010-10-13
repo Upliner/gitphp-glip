@@ -230,6 +230,8 @@ $gitphp_conf['cachelifetime'] = 3600;
  */
 //$gitphp_conf['pushurl'] = "http://localhost/git/push.php/";
 
+$author_map = array();
+
 /*
  * git_projects
  * Two-dimensional array list of projects
